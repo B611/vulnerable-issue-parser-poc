@@ -13,16 +13,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run Action
+      - name: Run Issue form parser
         id: parse
-        uses: ./
+        uses: peter-murray/issue-forms-body-parser@v4.0.0
         with:
           issue_id: ${{ github.event.issue.number }}
           separator: '###'
           label_marker_start: '>>'
-          label_marker_end: '>>'
+          label_marker_end: '<<'
 
-      - name: Show parsed data
+      - name: Show parsed data JSON
         env:
           parsed_data: ${{ steps.parse.outputs.payload }}
         run: |
