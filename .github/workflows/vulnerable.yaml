@@ -1,15 +1,29 @@
-steps:
-  - name: Run Issue form parser
-    id: parse
-    uses: peter-murray/issue-forms-body-parser@v4.0.0
-    with:
-      issue_id: ${{ github.event.issue.number }}
-      separator: '###'
-      label_marker_start: '>>'
-      label_marker_end: '<<'
+name: Test Action
 
-  - name: Show parsed data JSON
-    env:
-      parsed_data: ${{ steps.parse.outputs.payload }}
-    run: |
-      echo '${{ env.parsed_data }}'
+on:
+  issues:
+    types: [opened, reopened]
+
+jobs:
+  test:
+    name: Test Action
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Action
+        id: parse
+        uses: ./
+        with:
+          issue_id: ${{ github.event.issue.number }}
+          separator: '###'
+          label_marker_start: '>>'
+          label_marker_end: '>>'
+
+      - name: Show parsed data
+        env:
+          parsed_data: ${{ steps.parse.outputs.payload }}
+        run: |
+          echo '${{ env.parsed_data }}'
